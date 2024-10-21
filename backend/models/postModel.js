@@ -19,6 +19,10 @@ const postSchema = mongoose.Schema(
       ref: 'User',
       default: [],
     },
+    tags: {
+      type: [String],
+      default: [],
+    },
     replies: [
       {
         userId: {

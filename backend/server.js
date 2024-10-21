@@ -14,8 +14,6 @@ connectDB();
 const app = express();
 
 const PORT = process.env.PORT || 5000;
-app.use(cors());
-//
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -23,9 +21,10 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+app.use(cors({ origin: 'http://localhost:4000', credentials: true }));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);

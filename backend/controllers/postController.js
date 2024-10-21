@@ -3,7 +3,7 @@ import Post from '../models/postModel.js';
 
 const createPost = async (req, res) => {
   try {
-    const { postedBy, text, img } = req.body;
+    const { postedBy, text, img, tags } = req.body;
 
     if (!postedBy || !text || !img) {
       return res.status(400).json({ message: 'All fields are required' });
@@ -19,7 +19,7 @@ const createPost = async (req, res) => {
       return res.status(404).json({ message: 'User cant post ' });
     }
 
-    const newPost = new Post({ postedBy, text, img });
+    const newPost = new Post({ postedBy, text, img, tags });
 
     await newPost.save();
 
@@ -35,7 +35,7 @@ const getPost = async (req, res) => {
   try {
     const post = await Post.findById(id);
     if (!post) return res.status(404).json({ message: 'Not found' });
-    return res.status(200).json({ message: 'post found', post });
+    return res.status(200).json(post);
   } catch (err) {
     return res.status(400).json({ message: err.message });
   }
@@ -82,7 +82,7 @@ const likeUnLikePost = async (req, res) => {
       return res.status(200).json({ message: 'liked successfully' });
     }
   } catch (err) {
-    return res.status(400).json({ message: err.message });
+    return res.status(400).json({ message: err.message, m: 'err' });
   }
 };
 

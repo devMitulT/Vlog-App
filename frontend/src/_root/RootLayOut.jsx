@@ -1,13 +1,16 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import NavBar from '../components/NavBar';
 
 const RootLayOut = () => {
   return (
-    <>
-      <h1>Header</h1>
-      <NavLink />
-      <Outlet />
-      <h1>Footer</h1>
-    </>
+    <div className='w-full md:flex overflow-hidden h-full'>
+      <div className='hidden md:block w-64 h-full overflow-hidden'>
+        <NavBar />
+      </div>
+      <section className='flex flex-1 h-full overflow-y-auto'>
+        <Outlet />
+      </section>
+    </div>
   );
 };
 

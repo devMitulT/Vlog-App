@@ -1,17 +1,19 @@
-import { Container } from '@chakra-ui/react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import AuthLayOut from './_auth/AuthLayOut';
 import SignInForm from './_auth/SignInForm';
 import SignUpForm from './_auth/SignUpForm';
 import HomePage from './_root/HomePage';
 import RootLayOut from './_root/RootLayOut';
-import { useUserContext } from './lib/AuthContext';
+
+import CreatePost from './_root/CreatePost';
+import Profile from './_root/Profile';
+import Explore from './_root/Explore';
+import People from './_root/People';
+import Saved from './_root/Saved';
 
 const App = () => {
-  const { isAuthenticated } = useUserContext();
-
   return (
-    <Container maxW='620px'>
+    <main className='flex h-screen overflow-x'>
       <Routes>
         {/* Auth Routes */}
 
@@ -23,9 +25,14 @@ const App = () => {
         {/* Protected Routes  */}
         <Route element={<RootLayOut />}>
           <Route index element={<HomePage />} />
+          <Route path='/profile/:id' element={<Profile />} />
+          <Route path='/create-post' element={<CreatePost />} />
+          <Route path='/explore' element={<Explore />} />
+          <Route path='/people' element={<People />} />
+          <Route path='/saved' element={<Saved />} />
         </Route>
       </Routes>
-    </Container>
+    </main>
   );
 };
 
