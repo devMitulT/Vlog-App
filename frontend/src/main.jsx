@@ -9,7 +9,7 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { AuthProvider } from './lib/AuthContext.jsx';
-
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 const queryClient = new QueryClient();
 
 const styles = {
@@ -42,6 +42,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
         <ChakraProvider theme={theme}>
           <ColorModeScript initialColorMode={theme.config.initialCOlorMode} />
           <AuthProvider>

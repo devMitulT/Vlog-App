@@ -1,11 +1,14 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getUserFromId,
   loginUser,
   signUpUser,
   getFeedPost,
   setLikeUnlike,
+  getPostById,
 } from './api';
+
+//Auth API
 
 export const useLoginUser = () => {
   return useMutation({
@@ -19,19 +22,46 @@ export const useSignupUSer = () => {
   });
 };
 
+//User API
+
 export const useGetUserFromId = () => {
   return useMutation({
     mutationFn: (id) => getUserFromId(id),
   });
 };
 
+//Post API
+
 export const useGetFeedPost = () => {
-  return useMutation({
-    mutationFn: () => getFeedPost(),
+  return useQuery({
+    queryKey: ['getFeedPosts'],
+    queryFn: () => getFeedPost(),
+    onError: (error) => {
+      console.error('Error fetching feed posts:', error);
+    },
   });
 };
+
 export const useSetLikeUnlike = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (postId) => setLikeUnlike(postId),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['post', data?.id],
+      });
+    },
+  });
+};
+
+export const useGetPostFromId = (postId) => {
+  return useQuery({
+    queryKey: ['post', postId],
+    queryFn: () => getPostById(postId),
+    enabled: !!postId,
+    onError: (error) => {
+      console.error('Error fetching post:', error);
+    },
   });
 };

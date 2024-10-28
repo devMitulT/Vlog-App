@@ -1,3 +1,5 @@
+//Auth Api
+
 export const signUpUser = async (inputs) => {
   try {
     const response = await fetch('http://localhost:3000/api/users/signup', {
@@ -37,6 +39,27 @@ export const loginUser = async (inputs) => {
     console.log(e.message);
   }
 };
+
+export const logOutUser = async () => {
+  try {
+    const response = await fetch(`http://localhost:3000/api/users/logout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+
+    localStorage.removeItem('authenticated');
+
+    return data;
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+//User Api
 
 export const getProfileFromId = async () => {
   const authId = localStorage.getItem('authenticated');
@@ -84,44 +107,7 @@ export const getUserFromId = async (id) => {
   }
 };
 
-export const logOutUser = async () => {
-  try {
-    const response = await fetch(`http://localhost:3000/api/users/logout`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const data = await response.json();
-
-    localStorage.removeItem('authenticated');
-
-    return data;
-  } catch (err) {
-    console.log(err.message);
-  }
-};
-
-export const getPostById = async () => {
-  try {
-    const response = await fetch(
-      `http://localhost:3000/api/posts/6716143d90db7b9cd91aff5c`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    return data;
-  } catch (err) {
-    console.log(err.message);
-  }
-};
+//Post api
 
 export const getFeedPost = async () => {
   try {
@@ -135,7 +121,8 @@ export const getFeedPost = async () => {
 
     const data = await response.json();
 
-    return data;
+    const postIds = data.map((post) => post._id);
+    return postIds;
   } catch (err) {
     console.log(err.message);
   }
@@ -146,7 +133,7 @@ export const setLikeUnlike = async (postId) => {
     const response = await fetch(
       `http://localhost:3000/api/posts/like/${postId}`,
       {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -157,6 +144,25 @@ export const setLikeUnlike = async (postId) => {
     const data = await response.json();
 
     return data;
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+export const getPostById = async (postId) => {
+  try {
+    const response = await fetch(`http://localhost:3000/api/posts/${postId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const post = await response.json();
+
+    const user = await getUserFromId(post.postedBy);
+
+    return { post, user };
   } catch (err) {
     console.log(err.message);
   }

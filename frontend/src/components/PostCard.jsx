@@ -1,33 +1,17 @@
 import { Avatar, Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { ArrowRightIcon, ArrowLeftIcon } from '@chakra-ui/icons';
-import { useEffect, useState } from 'react';
-import { useGetUserFromId } from '../lib/queries';
-import liked from '../../public/liked.png';
-import like from '../../public/like.png';
+import { useState } from 'react';
+import { useGetPostFromId } from '../lib/queries';
+
 import { useUserContext } from '../lib/AuthContext';
+import { Link } from 'react-router-dom';
+import PostState from './PostState';
 
-const PostCard = (post) => {
-  const [user, setUser] = useState({});
+const PostCard = ({ postId }) => {
+  const { data, isLoading } = useGetPostFromId(postId);
+
   const [count, setCount] = useState(0);
-  const [isLiked, setIsLiked] = useState(false);
-
   const { user: currentUser } = useUserContext();
-
-  const { mutateAsync: getUser, isPending: isLoading } = useGetUserFromId();
-
-  useEffect(() => {
-    const userProfile = async (id) => {
-      const data = await getUser(id);
-
-      if (!data) {
-        console.log('No user Found');
-      } else {
-        setUser(data);
-      }
-    };
-
-    userProfile(post.post.postedBy);
-  }, [post]);
 
   const handleInc = () => {
     setCount(count + 1);
@@ -44,21 +28,21 @@ const PostCard = (post) => {
       ) : (
         <div className='bg-dark-3 rounded-3xl border my-3 border-pink-500 p-5 lg:p-7 w-full max-w-screen-xs'>
           <Flex flexDirection='column'>
-            <Flex>
-              <Avatar src={user.profilePic} />
-              <Flex flexDirection='column' marginLeft={5}>
-                <Text fontSize={20}> @{user.username}</Text>
-                <Text fontSize={20}>{user.name}</Text>
+            <Link to={`/profile/`}>
+              <Flex>
+                <Avatar src={'user?.profilePic'} />
+                <Flex flexDirection='column' marginLeft={5}>
+                  <Text fontSize={20}> @{data?.user?.username}</Text>
+                  <Text fontSize={20}>{data?.user?.name}</Text>
+                </Flex>
               </Flex>
-            </Flex>
+            </Link>
             <Text fontSize={17} margin={2}>
-              {post.post.text}
+              {data?.post?.text}
             </Text>
-
             <Text margin={2} fontSize={16} color='pink.200'>
-              {post.post.tags}
+              {data?.post?.tags}
             </Text>
-
             <div className='flex justify-center'>
               <Button
                 marginTop={125}
@@ -71,41 +55,21 @@ const PostCard = (post) => {
               </Button>
               <Box className='flex justify-center'>
                 <Image
-                  src={post.post.img[count]}
-                  alt={user.username}
+                  src={data?.post?.img[count]}
+                  alt={''}
                   className='mx-auto'
                 />
               </Box>
               <Button
                 marginTop={125}
                 marginLeft={5}
-                isDisabled={count === post.post.img.length - 1}
+                isDisabled={count === data?.post?.img?.length - 1}
                 onClick={handleInc}
               >
                 <ArrowRightIcon />
               </Button>
             </div>
-
-            <Flex padding={5}>
-              <Button
-                padding={0}
-                sx={{
-                  backgroundColor: '#101012',
-                  _hover: { backgroundColor: '#101012' },
-                }}
-              >
-                <Image
-                  marginBottom={1.5}
-                  src={isLiked ? liked : like}
-                  h={5}
-                  w={5}
-                  alt={user.username}
-                />
-              </Button>
-              <Text fontSize={20}>
-                Liked by {post.post.likes.length} people
-              </Text>
-            </Flex>
+            <PostState post={data.post} currentUser={currentUser} />
           </Flex>
         </div>
       )}
