@@ -1,4 +1,2 @@
 # Vlog-App
-
-complete
-daad
+Vloag _ App
