@@ -28,7 +28,7 @@ const PostCard = ({ postId }) => {
       ) : (
         <div className='bg-dark-3 rounded-3xl border my-3 border-pink-500 p-5 lg:p-7 w-full max-w-screen-xs'>
           <Flex flexDirection='column'>
-            <Link to={`/profile/`}>
+            <Link to={`/profile/${data?.user._id}`}>
               <Flex>
                 <Avatar src={'user?.profilePic'} />
                 <Flex flexDirection='column' marginLeft={5}>

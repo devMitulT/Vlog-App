@@ -5,13 +5,13 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
 import postRoutes from './routes/postRoutes.js';
+import messagesRoutes from './routes/messagesRoutes.js';
 
 import { v2 as cloudinary } from 'cloudinary';
+import { server, app } from './socket/socket.js';
 
 dotenv.config();
 connectDB();
-
-const app = express();
 
 const PORT = process.env.PORT || 5000;
 
@@ -28,7 +28,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api/messages', messagesRoutes);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`server listening on port ${PORT} `);
 });

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Box, Button, Flex, Spinner, Text } from '@chakra-ui/react';
-import { useGetUserFromId } from '../lib/queries';
+import { useFollowUnFollowUser, useGetUserFromId } from '../lib/queries';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUserContext } from '../lib/AuthContext';
 
@@ -20,8 +20,19 @@ const Profile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user: currentUser } = useUserContext();
+  const { mutateAsync: followUnfollow } = useFollowUnFollowUser();
 
   const { mutateAsync: getUser, isPending: isLoading } = useGetUserFromId();
+
+  const handleFollowButton = async (e) => {
+    console.log(user?._id);
+    e.preventDefault();
+    const data = await followUnfollow(user?._id);
+
+    if (!data) {
+      console.log('Error');
+    }
+  };
 
   const checkIsFollowed = () => {
     if (user?.followers.includes(currentUser.id)) {
@@ -44,11 +55,10 @@ const Profile = () => {
 
     userProfile(id);
   }, [id]);
+
   const handleEditButton = () => {
     navigate('/update-profile');
   };
-
-  const handleFollowButton = () => {};
 
   return (
     <div className='bg-dark-1 flex flex-1'>
@@ -73,8 +83,7 @@ const Profile = () => {
                 <Text fontSize={35}> {user.name} </Text>
 
                 <Text fontSize={25} sx={{ color: 'gray.500' }}>
-                  {' '}
-                  @{user.username}{' '}
+                  @{user.username}
                 </Text>
               </Flex>
 
@@ -127,7 +136,9 @@ const Profile = () => {
             </Flex>
             <Flex justify={'center'} align='center'>
               {currentUser.id !== user._id ? (
-                <Button onClick={checkIsFollowed}>Follow</Button>
+                <Button onClick={handleFollowButton}>
+                  {checkIsFollowed ? 'UnFollow' : 'Follow'}
+                </Button>
               ) : (
                 ''
               )}

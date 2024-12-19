@@ -6,6 +6,9 @@ import {
   getFeedPost,
   setLikeUnlike,
   getPostById,
+  getConversation,
+  getMessages,
+  sendMessage,
 } from './api';
 
 //Auth API
@@ -27,6 +30,12 @@ export const useSignupUSer = () => {
 export const useGetUserFromId = () => {
   return useMutation({
     mutationFn: (id) => getUserFromId(id),
+  });
+};
+
+export const useFollowUnFollowUser = () => {
+  return useMutation({
+    mutationFn: (id) => useFollowUnFollowUser(id),
   });
 };
 
@@ -63,5 +72,34 @@ export const useGetPostFromId = (postId) => {
     onError: (error) => {
       console.error('Error fetching post:', error);
     },
+  });
+};
+
+//Message Api
+export const useGetConversation = () => {
+  return useQuery({
+    queryKey: ['getConversation'],
+    queryFn: () => getConversation(),
+    onError: (error) => {
+      console.error('Error fetching feed posts:', error);
+    },
+  });
+};
+
+export const useGetMessage = (oId) => {
+  return useQuery({
+    queryKey: ['getMessage', oId],
+    queryFn: () => getMessages(oId),
+    onError: (error) => {
+      console.error('Error fetching feed posts:', error);
+    },
+  });
+};
+
+export const useSendMessage = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (inputs) => sendMessage(inputs),
   });
 };

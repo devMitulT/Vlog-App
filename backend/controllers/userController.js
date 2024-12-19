@@ -172,17 +172,42 @@ const updateUser = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
   const { query } = req.params;
+
   try {
-    const user = await User.findOne({ _id: query }).select('-password');
+    const isObjectId = /^[0-9a-fA-F]{24}$/.test(query);
+
+    const queryObj = isObjectId ? { _id: query } : { username: query };
+
+    const user = await User.findOne(queryObj).select('-password');
 
     if (!user) {
-      res.status(500).json({ message: 'User NOt FOund' });
+      return res.status(404).json({ message: 'User Not Found' });
     }
 
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error.message);
+    console.error(error.message);
+  }
+};
+
+const serachUserFromInitals = async (req, res) => {
+  const { query } = req.params;
+
+  try {
+    const search = query || '';
+    const users = await User.find({
+      username: { $regex: search, $options: 'i' },
+    });
+
+    if (!users) {
+      return res.status(404).json({ message: 'User Not Found' });
+    }
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+    console.error(error.message);
   }
 };
 
@@ -193,4 +218,5 @@ export {
   logoutUser,
   updateUser,
   followUnFollowUser,
+  serachUserFromInitals,
 };

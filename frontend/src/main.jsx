@@ -10,6 +10,7 @@ import './index.css';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { AuthProvider } from './lib/AuthContext.jsx';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { SocketContextProvider } from './lib/SocketContext.jsx';
 const queryClient = new QueryClient();
 
 const styles = {
@@ -46,7 +47,9 @@ createRoot(document.getElementById('root')).render(
         <ChakraProvider theme={theme}>
           <ColorModeScript initialColorMode={theme.config.initialCOlorMode} />
           <AuthProvider>
-            <App />
+            <SocketContextProvider>
+              <App />
+            </SocketContextProvider>
           </AuthProvider>
         </ChakraProvider>
       </QueryClientProvider>

@@ -11,6 +11,7 @@ import Explore from './_root/Explore';
 import People from './_root/People';
 import Saved from './_root/Saved';
 import UpdateProfile from './_root/UpdateProfile';
+import Chat from './_root/Chat';
 
 const App = () => {
   return (
@@ -32,6 +33,8 @@ const App = () => {
           <Route path='/people' element={<People />} />
           <Route path='/saved' element={<Saved />} />
           <Route path='/update-profile' element={<UpdateProfile />} />
+          <Route path='/chat' element={<Chat />} />
+
         </Route>
       </Routes>
     </main>

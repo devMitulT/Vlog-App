@@ -1,5 +1,7 @@
 //Auth Api
 
+import { useUserContext } from './AuthContext';
+
 export const signUpUser = async (inputs) => {
   try {
     const response = await fetch('http://localhost:3000/api/users/signup', {
@@ -107,6 +109,46 @@ export const getUserFromId = async (id) => {
   }
 };
 
+export const followUnfollowUser = async (id) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/users/follow/${id}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    return data;
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
+export const searchUser = async (ini) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/users/people/${ini}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    return data;
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
 //Post api
 
 export const getFeedPost = async () => {
@@ -165,5 +207,65 @@ export const getPostById = async (postId) => {
     return { post, user };
   } catch (err) {
     console.log(err.message);
+  }
+};
+
+//message api
+
+export const getConversation = async () => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/messages/conversations`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      }
+    );
+
+    const data = await response.json();
+
+    return data;
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+export const getMessages = async (oId) => {
+  try {
+    const response = await fetch(`http://localhost:3000/api/messages/${oId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    const data = await response.json();
+
+    return data;
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+export const sendMessage = async (inputs) => {
+  try {
+    const response = await fetch('http://localhost:3000/api/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(inputs),
+      credentials: 'include',
+    });
+
+    const data = await response.json();
+
+    return data;
+  } catch (e) {
+    console.log(e.message);
   }
 };

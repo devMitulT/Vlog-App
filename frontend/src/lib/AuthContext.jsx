@@ -22,6 +22,8 @@ export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [selectedMessager, setSelectedMessager] = useState(null);
+
   const navigate = useNavigate();
 
   const showToast = (title, description) => {
@@ -79,6 +81,8 @@ export function AuthProvider({ children }) {
     setIsAuthenticated,
     isLoading,
     showToast,
+    selectedMessager,
+    setSelectedMessager,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

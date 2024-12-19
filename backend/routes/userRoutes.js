@@ -7,6 +7,7 @@ import {
   followUnFollowUser,
   updateUser,
   getUserProfile,
+  serachUserFromInitals,
 } from '../controllers/userController.js';
 
 import protectRoute from '../middlewares/protectRoute.js';
@@ -19,4 +20,5 @@ router.post('/logout', logoutUser);
 router.post('/follow/:id', protectRoute, followUnFollowUser);
 router.put('/update/:id', protectRoute, updateUser);
 router.get('/profile/:query', getUserProfile);
+router.get('/people/:query', serachUserFromInitals);
 export default router;
