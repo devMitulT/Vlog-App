@@ -149,7 +149,29 @@ export const searchUser = async (ini) => {
   }
 };
 
-//Post api
+export const updateUserProfile = async (inputs) => {
+  const id = localStorage.getItem('authenticated');
+
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/users/update/${id}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(inputs),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      }
+    );
+
+    const data = await response.json();
+
+    return data;
+  } catch (e) {
+    console.log(e.message);
+  }
+}; //Post api
 
 export const getFeedPost = async () => {
   try {

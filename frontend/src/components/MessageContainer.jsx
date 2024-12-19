@@ -6,30 +6,84 @@ import {
   SkeletonCircle,
   Text,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Message from './Message';
 import MessageInput from './MessageInput';
 import { useUserContext } from '../lib/AuthContext';
-import { useGetMessage } from '../lib/queries';
 import { useSocket } from '../lib/SocketContext';
 import { getMessages } from '../lib/api';
 
 const MessageContainer = () => {
-  const { selectedMessager, user: currentUser } = useUserContext();
-  // const { data, isLoading } = useGetMessage(selectedMessager?.user?._id);
-
+  const {
+    selectedMessager,
+    user: currentUser,
+    conversations,
+    setConversations,
+  } = useUserContext();
+  const messsageEndRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const { socket } = useSocket();
 
   useEffect(() => {
-    socket?.on('newMessage', (message) => {
-      setMessages((prevMe) => [...prevMe, message]);
+    messsageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  useEffect(() => {
+    const lastMessageFromOtherUser =
+      messages.length &&
+      messages[messages.length - 1].sender !== currentUser.id;
+    if (lastMessageFromOtherUser) {
+      socket.emit('markMessagesAsSeen', {
+        conversationId: messages[messages.length - 1].conversationId,
+        userId: selectedMessager.id,
+      });
+    }
+
+    socket.on('messagesSeen', ({ conversationId }) => {
+      if (messages[messages.length - 1].conversationId === conversationId) {
+        setMessages((prev) => {
+          const updatedMessages = prev.map((message) => {
+            if (!message.seen) {
+              return {
+                ...message,
+                seen: true,
+              };
+            }
+            return message;
+          });
+          return updatedMessages;
+        });
+      }
+    });
+  }, [socket, currentUser.id, messages, selectedMessager]);
+
+  useEffect(() => {
+    socket.on('newMessage', (message) => {
+      if (selectedMessager.id === message.conversationId) {
+        setMessages((prevMe) => [...prevMe, message]);
+      }
+
+      setConversations((prev) => {
+        const updatedConversation = prev.map((conversation) => {
+          if (conversation._id === message.conversationId) {
+            return {
+              ...conversation,
+              lastMessage: {
+                text: message.text,
+                sender: message.sender,
+              },
+            };
+          }
+          return conversation;
+        });
+        return updatedConversation;
+      });
     });
 
     return () => socket.off('newMessage');
-  }, [socket, isLoading]);
+  }, [socket, setConversations, selectedMessager]);
 
   useEffect(() => {
     const getMessage = async () => {
@@ -46,7 +100,7 @@ const MessageContainer = () => {
     };
 
     getMessage();
-  }, [socket]);
+  }, [socket, selectedMessager]);
 
   return (
     <Flex
@@ -76,8 +130,7 @@ const MessageContainer = () => {
         {isLoading && [
           [...Array(10)].map((el, index) => (
             <Flex
-              key={`flex-item-${index}`} // Ensure a unique key by combining index with a prefix
-              gap={2}
+              key={`flex-item-${index}`}
               alignItems={'center'}
               p={1}
               borderRadius={'md'}
@@ -98,11 +151,20 @@ const MessageContainer = () => {
 
         {!isLoading &&
           messages?.map((message, index) => (
-            <Message
+            <Flex
               key={index}
-              ownMessage={message?.sender === currentUser.id}
-              message={message}
-            />
+              direction={'column'}
+              ref={
+                messages.length - 1 === messages.indexOf(message)
+                  ? messsageEndRef
+                  : null
+              }
+            >
+              <Message
+                ownMessage={message?.sender === currentUser.id}
+                message={message}
+              />
+            </Flex>
           ))}
       </Flex>
       <MessageInput setMessages={setMessages} />

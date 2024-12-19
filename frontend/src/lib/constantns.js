@@ -4,5 +4,4 @@ export const sidebar = [
   { name: 'Explore', link: '/explore' },
   { name: 'People', link: '/people' },
   { name: 'Create Post', link: '/create-post' },
-  { name: 'Saved', link: '/saved' },
 ];

@@ -81,9 +81,8 @@ const NavBar = () => {
         </ul>
         <div className='border border-pink-600 w-full' />{' '}
         <Button
-          margin={5}
           padding={6}
-          marginTop={180}
+          marginTop={100}
           bg='pink.400'
           color='white'
           _hover={{ bg: 'pink.600' }}

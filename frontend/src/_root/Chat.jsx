@@ -16,9 +16,16 @@ import { useUserContext } from '../lib/AuthContext';
 import { useSocket } from '../lib/SocketContext';
 
 const Chat = () => {
-  const { data: conversations, isLoading } = useGetConversation();
+  const { conversations, setConversations } = useUserContext();
+
+  const { data, isLoading } = useGetConversation();
   const { selectedMessager, setSelectedMessager } = useUserContext();
   const { onlineUsers } = useSocket();
+
+  useEffect(() => {
+    setConversations(data);
+  }, [isLoading]);
+
   return (
     <div className='flex flex-1'>
       <Flex
@@ -56,7 +63,9 @@ const Chat = () => {
             <Conversation
               key={index}
               conversation={conversation}
-              isOnline={onlineUsers.includes(conversation?.participants[0]?._id)}
+              isOnline={onlineUsers.includes(
+                conversation?.participants[0]?._id
+              )}
             />
           ))}
         </Flex>

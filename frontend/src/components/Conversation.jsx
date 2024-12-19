@@ -1,9 +1,8 @@
 import {
   Avatar,
   AvatarBadge,
-  Button,
+
   Flex,
-  Image,
   Stack,
   Text,
   WrapItem,

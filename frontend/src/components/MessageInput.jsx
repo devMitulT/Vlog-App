@@ -4,7 +4,7 @@ import { useUserContext } from '../lib/AuthContext';
 import { useState } from 'react';
 import { useSendMessage } from '../lib/queries';
 const MessageInput = ({ setMessages }) => {
-  const { selectedMessager } = useUserContext();
+  const { selectedMessager, setConversations } = useUserContext();
   const [messageText, setMessageText] = useState('');
 
   const { mutateAsync: sendMessage, isPending } = useSendMessage();

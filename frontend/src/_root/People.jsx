@@ -5,6 +5,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Text,
 } from '@chakra-ui/react';
 import { IoSendSharp } from 'react-icons/io5';
 import SerachUserCard from '../components/SerachUserCard';
@@ -57,11 +58,11 @@ const People = () => {
         <Divider />
 
         <ul>
-          {users?.map((user) => {
-            <li>
-              <SerachUserCard user={user} />;
-            </li>;
-          })}
+          {users?.map((user, index) => (
+            <li key={index}>
+              <SerachUserCard user={user} />
+            </li>
+          ))}
         </ul>
       </Flex>
     </div>

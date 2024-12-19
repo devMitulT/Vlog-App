@@ -9,6 +9,7 @@ import {
   getConversation,
   getMessages,
   sendMessage,
+  updateUserProfile,
 } from './api';
 
 //Auth API
@@ -36,6 +37,12 @@ export const useGetUserFromId = () => {
 export const useFollowUnFollowUser = () => {
   return useMutation({
     mutationFn: (id) => useFollowUnFollowUser(id),
+  });
+};
+
+export const useUpdateUser = () => {
+  return useMutation({
+    mutationFn: (inputs) => updateUserProfile(inputs),
   });
 };
 

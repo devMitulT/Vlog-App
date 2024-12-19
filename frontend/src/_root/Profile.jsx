@@ -96,6 +96,22 @@ const Profile = () => {
               )}
             </Flex>
 
+            <Flex
+              justify={'start'}
+              align={'center'}
+              marginTop={4}
+              marginLeft={8}
+              paddingX={5}
+            >
+              <Text
+                fontSize={20}
+                textAlign='center'
+                maxWidth='600px'
+                color='gray.600'
+              >
+                {user.bio}
+              </Text>
+            </Flex>
             <Flex margin={7} justifyContent={'space-between'}>
               <Flex
                 justify={'center'}

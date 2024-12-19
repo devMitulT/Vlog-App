@@ -23,8 +23,8 @@ cloudinary.config({
 
 app.use(cors({ origin: 'http://localhost:4000', credentials: true }));
 app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
