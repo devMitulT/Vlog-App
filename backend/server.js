@@ -6,7 +6,6 @@ import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import messagesRoutes from './routes/messagesRoutes.js';
-import createServer from '@vercel/node';
 
 import { v2 as cloudinary } from 'cloudinary';
 import { server, app } from './socket/socket.js';
