@@ -6,6 +6,7 @@ import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import messagesRoutes from './routes/messagesRoutes.js';
+import createServer from '@vercel/node';
 
 import { v2 as cloudinary } from 'cloudinary';
 import { server, app } from './socket/socket.js';
@@ -29,6 +30,10 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/messages', messagesRoutes);
+
+app.get('/', (req, res) => {
+  res.send('Hello from Vercel!');
+});
 
 server.listen(PORT, () => {
   console.log(`server listening on port ${PORT} `);
