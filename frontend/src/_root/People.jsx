@@ -37,7 +37,6 @@ const People = () => {
     setSearch('');
   };
 
-  console.log(search, users);
   return (
     <div className='bg-dark-1 flex flex-1 justify-center'>
       <Flex flexDirection={'column'}>

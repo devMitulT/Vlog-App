@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Avatar, Box, Button, Flex, Spinner, Text } from '@chakra-ui/react';
-import { useFollowUnFollowUser, useGetUserFromId } from '../lib/queries';
+import { useEffect, useState } from 'react';
+import { Avatar, Button, Flex, Spinner, Text } from '@chakra-ui/react';
+import { useFollowUnFollowUser, useGetUserProfile } from '../lib/queries';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUserContext } from '../lib/AuthContext';
+import { followUnfollowUser } from '../lib/api';
 
 export const INITIAL_USER = {
-  id: '',
+  _id: '',
   name: '',
   username: '',
   email: '',
@@ -16,49 +17,35 @@ export const INITIAL_USER = {
 };
 
 const Profile = () => {
+  const { user: currentUser } = useUserContext();
+
   const [user, setUser] = useState(INITIAL_USER);
   const { id } = useParams();
+
   const navigate = useNavigate();
-  const { user: currentUser } = useUserContext();
-  const { mutateAsync: followUnfollow } = useFollowUnFollowUser();
 
-  const { mutateAsync: getUser, isPending: isLoading } = useGetUserFromId();
+  const { data, isPending: isLoading } = useGetUserProfile(id);
+  const { mutateAsync: followUnfollow, isPending } = useFollowUnFollowUser();
 
-  const handleFollowButton = async (e) => {
-    console.log(user?._id);
+  const followUnfollowButton = async (e) => {
     e.preventDefault();
-    const data = await followUnfollow(user?._id);
 
-    if (!data) {
-      console.log('Error');
-    }
-  };
-
-  const checkIsFollowed = () => {
-    if (user?.followers.includes(currentUser.id)) {
-      console.log(true);
-    } else {
-      console.log(false);
+    try {
+      const data = await followUnfollow(user?._id);
+      console.log(data);
+    } catch (err) {
+      console.log(err);
     }
   };
 
   useEffect(() => {
-    const userProfile = async (id) => {
-      const data = await getUser(id);
-
-      if (!data) {
-        console.log('No user Found');
-      } else {
-        setUser(data);
-      }
-    };
-
-    userProfile(id);
-  }, [id]);
+    setUser(data);
+  }, [id, isPending]);
 
   const handleEditButton = () => {
     navigate('/update-profile');
   };
+  console.log(user.followers);
 
   return (
     <div className='bg-dark-1 flex flex-1'>
@@ -75,7 +62,7 @@ const Profile = () => {
           <Flex flexDirection={'column'}>
             <Flex justify={'center'} align={'center'}>
               <Avatar
-                src={user.profilePic}
+                src={user?.profilePic}
                 size='2xl'
                 sx={{ borderColor: 'pink.600' }}
               />
@@ -152,8 +139,10 @@ const Profile = () => {
             </Flex>
             <Flex justify={'center'} align='center'>
               {currentUser.id !== user._id ? (
-                <Button onClick={handleFollowButton}>
-                  {checkIsFollowed ? 'UnFollow' : 'Follow'}
+                <Button onClick={followUnfollowButton}>
+                  {user?.followers.includes(currentUser.id)
+                    ? 'UnFollow'
+                    : 'Follow'}
                 </Button>
               ) : (
                 ''

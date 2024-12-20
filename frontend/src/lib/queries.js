@@ -10,6 +10,7 @@ import {
   getMessages,
   sendMessage,
   updateUserProfile,
+  followUnfollowUser,
 } from './api';
 
 //Auth API
@@ -28,6 +29,17 @@ export const useSignupUSer = () => {
 
 //User API
 
+export const useGetUserProfile = (id) => {
+  return useQuery({
+    queryKey: ['getUser', id],
+    queryFn: () => getUserFromId(id),
+    enabled: !!id,
+    onError: (error) => {
+      console.error('Error fetching post:', error);
+    },
+  });
+};
+
 export const useGetUserFromId = () => {
   return useMutation({
     mutationFn: (id) => getUserFromId(id),
@@ -35,8 +47,15 @@ export const useGetUserFromId = () => {
 };
 
 export const useFollowUnFollowUser = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: (id) => useFollowUnFollowUser(id),
+    mutationFn: (id) => followUnfollowUser(id),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['getUser', data?.id],
+      });
+    },
   });
 };
 

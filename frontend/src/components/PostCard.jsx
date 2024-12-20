@@ -30,7 +30,7 @@ const PostCard = ({ postId }) => {
           <Flex flexDirection='column'>
             <Link to={`/profile/${data?.user._id}`}>
               <Flex>
-                <Avatar src={'user?.profilePic'} />
+                <Avatar src={data?.user?.profilePic} />
                 <Flex flexDirection='column' marginLeft={5}>
                   <Text fontSize={20}> @{data?.user?.username}</Text>
                   <Text fontSize={20}>{data?.user?.name}</Text>

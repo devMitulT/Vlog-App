@@ -8,8 +8,6 @@ import {
   Stack,
   useColorModeValue,
   Avatar,
-  AvatarBadge,
-  IconButton,
   Center,
   Spinner,
 } from '@chakra-ui/react';
@@ -39,7 +37,7 @@ const UpdateProfile = () => {
     e.preventDefault();
 
     try {
-      const data = await updateUser({ inputs, profilePic: imgUrl });
+      const data = await updateUser({ ...inputs, profilePic: imgUrl });
       showToast('Succesfully', data.message);
       console.log(data);
       navigate(`/profile/${user?.id}`);
@@ -52,7 +50,6 @@ const UpdateProfile = () => {
     navigate(`/profile/${user?.id}`);
   };
 
-  console.log(inputs);
   return (
     <Flex
       minH={'100vh'}

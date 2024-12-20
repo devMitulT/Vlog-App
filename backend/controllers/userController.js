@@ -118,7 +118,7 @@ const followUnFollowUser = async (req, res) => {
     } else {
       await User.findByIdAndUpdate(req.user._id, { $push: { following: id } });
       await User.findByIdAndUpdate(id, { $push: { followers: req.user._id } });
-      res.status(200).json({ message: 'User Followed successfully' });
+      res.status(200).json({ message: 'User Followed successfully', id });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -147,7 +147,7 @@ const updateUser = async (req, res) => {
     if (profilePic) {
       if (user.profilePic) {
         await cloudinary.uploader.destroy(
-          user.profilePic.aplit('/').pop().split('.')[0]
+          user.profilePic.split('/').pop().split('.')[0]
         );
       }
 

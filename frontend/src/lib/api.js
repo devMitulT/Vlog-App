@@ -2,9 +2,11 @@
 
 import { useUserContext } from './AuthContext';
 
+const url = 'http://localhost:3000';
+
 export const signUpUser = async (inputs) => {
   try {
-    const response = await fetch('http://localhost:3000/api/users/signup', {
+    const response = await fetch(`${url}/api/users/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -24,7 +26,7 @@ export const signUpUser = async (inputs) => {
 
 export const loginUser = async (inputs) => {
   try {
-    const response = await fetch('http://localhost:3000/api/users/login', {
+    const response = await fetch(`${url}/api/users/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,7 +46,7 @@ export const loginUser = async (inputs) => {
 
 export const logOutUser = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/api/users/logout`, {
+    const response = await fetch(`${url}/api/users/logout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -71,15 +73,12 @@ export const getProfileFromId = async () => {
   }
 
   try {
-    const response = await fetch(
-      `http://localhost:3000/api/users/profile/${authId}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`${url}/api/users/profile/${authId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     const data = await response.json();
 
@@ -91,15 +90,12 @@ export const getProfileFromId = async () => {
 
 export const getUserFromId = async (id) => {
   try {
-    const response = await fetch(
-      `http://localhost:3000/api/users/profile/${id}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`${url}/api/users/profile/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     const data = await response.json();
 
@@ -111,15 +107,13 @@ export const getUserFromId = async (id) => {
 
 export const followUnfollowUser = async (id) => {
   try {
-    const response = await fetch(
-      `http://localhost:3000/api/users/follow/${id}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`${url}/api/users/follow/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
 
     const data = await response.json();
 
@@ -150,20 +144,19 @@ export const searchUser = async (ini) => {
 };
 
 export const updateUserProfile = async (inputs) => {
+  console.log(inputs);
+
   const id = localStorage.getItem('authenticated');
 
   try {
-    const response = await fetch(
-      `http://localhost:3000/api/users/update/${id}`,
-      {
-        method: 'PUT',
-        body: JSON.stringify(inputs),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      }
-    );
+    const response = await fetch(`${url}/api/users/update/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(inputs),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
 
     const data = await response.json();
 
@@ -175,7 +168,7 @@ export const updateUserProfile = async (inputs) => {
 
 export const getFeedPost = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/api/posts/feed`, {
+    const response = await fetch(`${url}/api/posts/feed`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -194,16 +187,13 @@ export const getFeedPost = async () => {
 
 export const setLikeUnlike = async (postId) => {
   try {
-    const response = await fetch(
-      `http://localhost:3000/api/posts/like/${postId}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      }
-    );
+    const response = await fetch(`${url}/api/posts/like/${postId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
 
     const data = await response.json();
 
@@ -215,7 +205,7 @@ export const setLikeUnlike = async (postId) => {
 
 export const getPostById = async (postId) => {
   try {
-    const response = await fetch(`http://localhost:3000/api/posts/${postId}`, {
+    const response = await fetch(`${url}/api/posts/${postId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -232,20 +222,38 @@ export const getPostById = async (postId) => {
   }
 };
 
+export const createPost = async (inputs) => {
+  console.log(inputs);
+
+  try {
+    const response = await fetch(`${url}/api/posts/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(inputs),
+      credentials: 'include',
+    });
+
+    const data = await response.json();
+
+    return data;
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
 //message api
 
 export const getConversation = async () => {
   try {
-    const response = await fetch(
-      `http://localhost:3000/api/messages/conversations`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      }
-    );
+    const response = await fetch(`{url}/api/messages/conversations`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
 
     const data = await response.json();
 
@@ -257,7 +265,7 @@ export const getConversation = async () => {
 
 export const getMessages = async (oId) => {
   try {
-    const response = await fetch(`http://localhost:3000/api/messages/${oId}`, {
+    const response = await fetch(`${url}/api/messages/${oId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -275,7 +283,7 @@ export const getMessages = async (oId) => {
 
 export const sendMessage = async (inputs) => {
   try {
-    const response = await fetch('http://localhost:3000/api/messages', {
+    const response = await fetch(`${url}/api/messages`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

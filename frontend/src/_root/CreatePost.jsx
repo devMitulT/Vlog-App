@@ -17,14 +17,16 @@ import React, { useRef, useState } from 'react';
 import usePreviewImg from '../lib/usePreviewImg';
 import { CloseIcon } from '@chakra-ui/icons';
 import { useUserContext } from '../lib/AuthContext';
+import { createPost } from '../lib/api';
+import { useNavigate } from 'react-router-dom';
 
 const CreatePost = () => {
-  const { user } = useUserContext();
+  const { user, showToast } = useUserContext();
   const fileRef = useRef(null);
   const { handleImageChange, imgUrl } = usePreviewImg();
   const [data, setData] = useState({ postedBy: user.id, text: '', tags: '' });
   const [imageArray, setImageArray] = useState([]);
-
+  const navigate = useNavigate();
   const addImageToArray = (newImgUrl) => {
     setImageArray((prevArray) => [...prevArray, newImgUrl]);
   };
@@ -42,9 +44,15 @@ const CreatePost = () => {
   };
   const [imgCount, setImgCount] = useState(0);
 
-  const handlePostButton = (e) => {
+  const handlePostButton = async (e) => {
     e.preventDefault();
-    console.log({ data, imageArray });
+    try {
+      const postData = await createPost({ ...data, img: imageArray });
+      showToast('Sucess', data.message);
+      navigate('/');
+    } catch (err) {
+      showToast('Error', err.message);
+    }
   };
 
   return (
